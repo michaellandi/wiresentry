@@ -1,5 +1,5 @@
 # Wire Sentry #
-Copyright © 2012 Michael Landi 
+Copyright © 2013 Michael Landi 
 
 ---  
 
