@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WireSentry</RootNamespace>
+    <AssemblyName>WireSentry</AssemblyName>
+    <StartupObject>WireSentry.Driver</StartupObject>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Custom" />
+      </CustomCommands>
+    </CustomCommands>
+    <Commandlineparameters>-d "en0" -vvvvv</Commandlineparameters>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="System.Data" />
+    <Reference Include="PacketDotNet">
+      <HintPath>bin\Debug\PacketDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpPcap">
+      <HintPath>bin\Debug\SharpPcap.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>bin\Debug\mysql.data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity">
+      <HintPath>bin\Debug\mysql.data.entity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CachedDnsProvider.cs" />
+    <Compile Include="ConsoleDebug.cs" />
+    <Compile Include="Daemon.cs" />
+    <Compile Include="DataPacketQueue.cs" />
+    <Compile Include="IPacketProcessor.cs" />
+    <Compile Include="ModuleManager.cs" />
+    <Compile Include="PacketProcessor.cs" />
+    <Compile Include="IDnsProvider.cs" />
+    <Compile Include="IPacketLogger.cs" />
+    <Compile Include="NullLogger.cs" />
+    <Compile Include="MySqlLogger.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Driver.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WireSentry.Scanners.Common\WireSentry.Scanners.Common.csproj">
+      <Project>{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}</Project>
+      <Name>WireSentry.Scanners.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WireSentry.SDK\WireSentry.SDK.csproj">
+      <Project>{77993A1F-D993-4D0A-96AB-0A525522172C}</Project>
+      <Name>WireSentry.SDK</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

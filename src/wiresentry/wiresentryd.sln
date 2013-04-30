@@ -1,0 +1,32 @@
+
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireSentry", "WireSentry\WireSentry.csproj", "{215D9DBD-8FD7-4B58-AB95-B3E75AC89C6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireSentry.SDK", "WireSentry.SDK\WireSentry.SDK.csproj", "{77993A1F-D993-4D0A-96AB-0A525522172C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireSentry.Scanners.Common", "WireSentry.Scanners.Common\WireSentry.Scanners.Common.csproj", "{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{215D9DBD-8FD7-4B58-AB95-B3E75AC89C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{215D9DBD-8FD7-4B58-AB95-B3E75AC89C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{215D9DBD-8FD7-4B58-AB95-B3E75AC89C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{215D9DBD-8FD7-4B58-AB95-B3E75AC89C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77993A1F-D993-4D0A-96AB-0A525522172C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77993A1F-D993-4D0A-96AB-0A525522172C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77993A1F-D993-4D0A-96AB-0A525522172C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77993A1F-D993-4D0A-96AB-0A525522172C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E416F51F-3D91-44B5-B1B5-8BEE2F00C036}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = XTSec\WireSentry.csproj
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,30 @@
+CREATE TABLE events (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`signature` VARCHAR(64) NOT NULL,
+	`start_date` DATETIME NOT NULL,
+	`attack_address` VARCHAR(16),
+	`victim_address` VARCHAR(16),
+	`attack_type` VARCHAR(64),
+	`scanner_id` CHAR(36) NOT NULL,
+	`last_activity` DATETIME,
+	PRIMARY KEY (`id`)
+) ENGINE=`InnoDB` DEFAULT CHARSET=latin5;
+
+CREATE TABLE packets (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`event_id` INT NOT NULL,
+	`port_source` INT NOT NULL,
+	`port_destination` INT NOT NULL,
+	`ip_address_source` VARCHAR(16),
+	`ip_address_destination` VARCHAR(16),
+	`domain_source` VARCHAR(256),
+	`domain_destination` VARCHAR(256),
+	`hardware_address_source` VARCHAR(16),
+	`hardware_address_target` VARCHAR(16),
+	`type` VARCHAR(16),
+	`payload` BLOB,
+	`timestamp` DATETIME NOT NULL,
+	`protocol` VARCHAR(4),
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`event_id`) REFERENCES events(`id`) ON DELETE CASCADE
+) ENGINE=`InnoDB` DEFAULT CHARSET=latin5;
