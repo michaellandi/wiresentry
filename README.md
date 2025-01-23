@@ -9,6 +9,8 @@ Wire Sentry is a tool for analyzing network patterns to identify malicious activ
 
 The application is currently coded in c# using the [mono][mono] framework.  Future portions of this application will use C and Ruby on Rails to add new features.
 
+For more information, see [./wiresentry.pdf](wiresentry.pdf)
+
 ## License ##
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.
