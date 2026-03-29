@@ -85,4 +85,4 @@ wiresentry.pdf             # Design document
 
 ## License
 
-GNU General Public License v3. See [LICENSE.txt](LICENSE.txt) for details.
+MIT License. See [LICENSE](LICENSE) for details.
