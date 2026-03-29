@@ -1,27 +1,86 @@
-# Wire Sentry #
-Copyright © 2013 Michael Landi 
+# Wire Sentry
 
----  
+**Wire Sentry** is a modular network intrusion detection system (IDS) framework written in C# for the [Mono](http://www.mono-project.com) runtime. It captures live network traffic and runs it through a set of pluggable scanner modules to identify malicious activity in real time.
 
-## About ##
+## Features
 
-Wire Sentry is a tool for analyzing network patterns to identify malicious activity.  It actively captures network traffic and compares the traffic against various scanners which attempt to identify these activities.  Wire Sentry is built upon a modular architecture in which attack patterns and scanners can be added to the application via dynamically loaded modules.  It is distributed with an SDK for creating these add-on modules in the hope that a large library of attack patterns can be created.
+- Live packet capture via [SharpPcap](https://github.com/dotpcap/sharppcap)
+- Modular scanner architecture — load custom detectors as DLL plugins at runtime
+- Built-in scanners for common attack patterns:
+  - **Port scan detection** — identifies sequential TCP port sweeps
+  - **ARP spoofing detection**
+  - **DNS spoofing detection**
+- Optional MySQL logging of scan results
+- Daemon mode for continuous background monitoring
+- Ruby on Rails web interface (`src/wiresentry-web`) for viewing results
+- SDK (`WireSentry.SDK`) for building your own scanner modules
 
-The application is currently coded in c# using the [mono][mono] framework.  Future portions of this application will use C and Ruby on Rails to add new features.
+## Requirements
 
-For more information, see [./wiresentry.pdf](wiresentry.pdf)
+- [Mono](http://www.mono-project.com) runtime
+- [SharpPcap](https://github.com/dotpcap/sharppcap) / PacketDotNet
+- MySQL (optional, for result logging)
+- libpcap / WinPcap
 
-## License ##
+## Usage
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.
+```
+wsentryd -d {DEVICE} -c {CONNECTION_STRING} [-v]
 
-This software is currently in its conception phase and is under active development.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+Options:
+  -d, --device=DEVICE      Network interface to capture on
+  -c                       MySQL connection string (optional)
+  -v                       Increase debug verbosity (repeatable)
+  -n, --normal             Disable promiscuous mode
+  -h, --help               Show help
+```
 
-You should have received a copy of the GNU General Public License along with this program. If not, see [www.gnu.org/licenses/][gpl].
+**Example:**
+```bash
+sudo mono WireSentry.exe -d eth0 -v
+sudo mono WireSentry.exe -d eth0 -c "Server=localhost;Database=wiresentry;Uid=root;Pwd=pass;"
+```
 
-## Contact ##
+## Building a Custom Scanner
 
-For any bug reports or feature requests please contact me at mlandi[@]sourcesecure[.]net.
+Add a reference to `WireSentry.SDK.dll` and subclass `Scanner`:
 
-[gpl]:          http://www.gnu.org/licenses/
-[mono]:         http://www.mono-project.com
+```csharp
+using WireSentry.SDK;
+
+public class MyScanner : Scanner
+{
+    public MyScanner(IDebug debugger) : base(debugger) { }
+
+    public override Guid Id => new Guid("...");
+    public override string Author => "Your Name";
+    public override string Name => "My Scanner";
+    public override int Frequency => 30; // seconds
+
+    public override IEnumerable<ScannerResult> Scan(IDataPacketCollection packets)
+    {
+        // Analyze packets and yield ScannerResult instances for detections
+        yield break;
+    }
+}
+```
+
+Drop the compiled DLL into the scanners directory and Wire Sentry will load it automatically at startup.
+
+## Project Structure
+
+```
+src/
+  wiresentry/              # Core daemon (C#/Mono)
+    WireSentry/            # Main executable and daemon
+    WireSentry.SDK/        # SDK for building scanner modules
+    WireSentry.Scanners.Common/  # Built-in scanner modules
+  wiresentry-web/          # Web UI (Ruby on Rails)
+data/
+  schema.mysql             # Database schema
+wiresentry.pdf             # Design document
+```
+
+## License
+
+GNU General Public License v3. See [LICENSE.txt](LICENSE.txt) for details.
