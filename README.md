@@ -86,3 +86,7 @@ wiresentry.pdf             # Design document
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+Last updated: April 13, 2026
