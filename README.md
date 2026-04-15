@@ -1,3 +1,5 @@
+April 2026
+
 # Wire Sentry
 
 **Wire Sentry** is a modular network intrusion detection system (IDS) framework written in C# for the [Mono](http://www.mono-project.com) runtime. It captures live network traffic and runs it through a set of pluggable scanner modules to identify malicious activity in real time.
