@@ -72,16 +72,26 @@ namespace WireSentry
 
 			Console.Write(message);
 
-			if (message.Length < Console.WindowWidth + 7)
+			int windowWidth;
+			try
 			{
-				for (int i = 0; i < (Console.WindowWidth - (message.Length + 7)); i++)
+				windowWidth = Console.WindowWidth;
+			}
+			catch
+			{
+				windowWidth = 80;
+			}
+
+			if (message.Length < windowWidth + 7)
+			{
+				for (int i = 0; i < (windowWidth - (message.Length + 7)); i++)
 				{
 					Console.Write(" ");
 				}
 			} 
 			else
 			{
-				var leftover = message.Length + 7 % Console.WindowWidth;
+				var leftover = message.Length + 7 % windowWidth;
 
 				for (int i = 0; i < leftover - 7; i++)
 				{

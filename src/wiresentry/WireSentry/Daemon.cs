@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Linq;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
-using Mono.Unix;
-using Mono.Unix.Native;
 using SharpPcap;
 using WireSentry.SDK;
 
@@ -171,7 +168,7 @@ namespace WireSentry
 			ICaptureDevice device = null;
 
 			//Attempt to load modules in the current directory.
-			ModuleEngine.Load(UnixEnvironment.CurrentDirectory);
+			ModuleEngine.Load(Environment.CurrentDirectory);
 			ModuleEngine.ScannerShouldExecute += HandleModuleShouldExecute;
 
 			//Open the logger for output.
@@ -237,12 +234,13 @@ namespace WireSentry
 			//Start module scheduler thread.
 			ModuleEngine.StartScheduler();
 
-			//Waits for a UNIX kill signal.
-			UnixSignal.WaitAny(new UnixSignal [] {
-				new UnixSignal(Signum.SIGINT),
-				new UnixSignal(Signum.SIGTERM),
-				new UnixSignal(Signum.SIGQUIT),
-				new UnixSignal(Signum.SIGHUP) });
+			//Wait for a termination signal using .NET's PosixSignalRegistration.
+			var shutdownEvent = new ManualResetEventSlim(false);
+			using var sigInt = PosixSignalRegistration.Create(PosixSignal.SIGINT, _ => shutdownEvent.Set());
+			using var sigTerm = PosixSignalRegistration.Create(PosixSignal.SIGTERM, _ => shutdownEvent.Set());
+			using var sigQuit = PosixSignalRegistration.Create(PosixSignal.SIGQUIT, _ => shutdownEvent.Set());
+			using var sigHup = PosixSignalRegistration.Create(PosixSignal.SIGHUP, _ => shutdownEvent.Set());
+			shutdownEvent.Wait();
 
 			/*
 			 * At this point a kill signal has been received and

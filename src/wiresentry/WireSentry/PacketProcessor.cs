@@ -25,7 +25,7 @@ namespace WireSentry
 			DnsLookupQueue = new Queue<DataPacket>();
 			WaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-			//Create a bBackground thread to handle DNS lookups for packets
+			//Create a background thread to handle DNS lookups for packets
 			new Thread(() => {
 				while (true) 
 				{
@@ -65,14 +65,14 @@ namespace WireSentry
 
 			//Convert the raw data from the interface to a packet.
 			var spacket = Packet.ParsePacket(capture.LinkLayerType, capture.Data);
-			var ip = IpPacket.GetEncapsulated(spacket);
+			var ip = spacket.Extract<IPPacket>();
 
 			/*
 			 * Determine if the packet is a TCP packet.
 			 * If it is map each of the fields of the packet to the
 			 * new storage structure.
 			 */
-			var tcp = TcpPacket.GetEncapsulated(spacket);
+			var tcp = spacket.Extract<TcpPacket>();
 			if (tcp != null && ip != null)
 			{
 				dpacket.IpAddressSource = ip.SourceAddress.ToString();
@@ -98,7 +98,7 @@ namespace WireSentry
 			 * If it is map each of the fields of the packet to the
 			 * new storage structure.
 			 */
-			var udp = UdpPacket.GetEncapsulated(spacket);
+			var udp = spacket.Extract<UdpPacket>();
 			if (udp != null && ip != null)
 			{
 				dpacket.IpAddressSource = ip.SourceAddress.ToString();
@@ -124,7 +124,7 @@ namespace WireSentry
 			 * If it is map each of the fields of the packet to the
 			 * new storage structure.
 			 */
-			var icmp = ICMPv4Packet.GetEncapsulated(spacket);
+			var icmp = spacket.Extract<IcmpV4Packet>();
 			if (icmp != null && ip != null)
 			{
 				dpacket.IpAddressSource = ip.SourceAddress.ToString();
@@ -149,7 +149,7 @@ namespace WireSentry
 			 * If it is map each of the fields of the packet to the
 			 * new storage structure.
 			 */
-			var arp = ARPPacket.GetEncapsulated(spacket);
+			var arp = spacket.Extract<ArpPacket>();
 			if (arp != null)
 			{
 				dpacket.Timestamp = DateTime.Now;
@@ -161,9 +161,7 @@ namespace WireSentry
 				return dpacket;
 			}
 
-			//Console.WriteLine("  UNKNOWN TYPE: " + ((EthernetPacket)spacket).Type.ToString());
             return null;
 		}
 	}
 }
-

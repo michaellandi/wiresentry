@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-002",
+  "type": "chore",
+  "description": "Upgrade Ruby on Rails web app dependencies in Gemfile and Gemfile.lock. The app is currently on Rails 3.2.8 (released 2012) with correspondingly old gems. Upgrade all gems to their latest stable versions compatible with each other. Rails should go to 7.2.x (latest stable 7.2 series). All asset pipeline gems, database adapters, and utility gems should be updated to their latest compatible versions. The Gemfile.lock must be regenerated to reflect the new dependency tree. Since we cannot run bundle install (INTEGRATIONS_ONLY network), manually rewrite both files with correct latest versions.",
+  "status": "completed",
+  "steps": [
+    "Rewrite src/wiresentry-web/Gemfile with upgraded gem versions: rails ~> 7.2.2, sqlite3 ~> 2.6, sassc-rails ~> 2.1 (replaces sass-rails), coffee-rails removed (deprecated), uglifier replaced with terser ~> 1.2, jquery-rails ~> 4.6, mysql2 ~> 0.5.6, sprockets-rails ~> 3.5, importmap-rails ~> 2.1. Remove the old :assets group since Rails 7 does not use asset groups. Add puma ~> 6.5 as the default web server.",
+    "Rewrite src/wiresentry-web/Gemfile.lock with the updated dependency resolution tree matching the new Gemfile versions. Include all transitive dependencies with their latest stable versions."
+  ],
+  "acceptance_criteria": [
+    "Gemfile contains rails ~> 7.2.2 or similar latest stable constraint",
+    "Gemfile no longer references deprecated gems (coffee-rails, uglifier with old version)",
+    "Gemfile.lock dependency tree is internally consistent - all version constraints in DEPENDENCIES match what is in the Gemfile",
+    "Gemfile.lock lists rails 7.2.x with matching sub-component versions",
+    "mysql2 is upgraded to 0.5.x series",
+    "Ruby syntax in Gemfile is valid"
+  ],
+  "verification": [
+    "Run ruby -c src/wiresentry-web/Gemfile to check syntax",
+    "Grep Gemfile for rails version to confirm upgrade",
+    "Grep Gemfile.lock for rails version to confirm matching version"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

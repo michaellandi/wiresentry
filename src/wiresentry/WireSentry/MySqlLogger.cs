@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Threading;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using WireSentry.SDK;
 
 namespace WireSentry

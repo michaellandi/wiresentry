@@ -77,7 +77,7 @@ namespace WireSentry.SDK
 			//Calculate a MD5 hash of the unique input.
 			var builder = new StringBuilder();
 			var bytes = Encoding.ASCII.GetBytes(input);
-			var hash = new MD5CryptoServiceProvider().ComputeHash(bytes);
+			var hash = MD5.HashData(bytes);
 			for (int i = 0; i < hash.Length; i++)
 			{
 				builder.Append(hash[i].ToString("X2"));

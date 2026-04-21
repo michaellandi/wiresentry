@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using Mono.Options;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace WireSentry
 {
