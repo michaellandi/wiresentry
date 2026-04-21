@@ -1,0 +1,23 @@
+{
+  "project_type": "Two sub-projects: (1) C#/Mono network IDS daemon with old-style .csproj, (2) Ruby on Rails 3.2 web UI",
+  "language": "C# and Ruby",
+  "build_system": "MSBuild/Mono for C#, Bundler/Rake for Rails. No Makefile or CI config present.",
+  "test_framework": "No test infrastructure found in either sub-project",
+  "build_command": "N/A - INTEGRATIONS_ONLY network mode, cannot run msbuild or bundle install",
+  "test_command": "N/A - no tests exist",
+  "verification_instructions": "Verify manifest file syntax is correct via visual inspection and XML/Ruby syntax checks",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "N/A - INTEGRATIONS_ONLY mode, cannot install dependencies",
+  "environment_constraints": "INTEGRATIONS_ONLY network mode. Cannot run nuget restore, bundle install, dotnet restore, docker build, or any command that fetches packages. All changes must be direct file edits to dependency manifests.",
+  "contribution_requirements": "No CONTRIBUTING.md found. MIT licensed.",
+  "key_patterns": "C# projects use old-style .csproj (ToolsVersion 4.0) with DLL references via HintPath (not NuGet PackageReference). The WireSentry.csproj references PacketDotNet.dll, SharpPcap.dll, MySql.Data.dll, and MySql.Data.Entity.dll from bin\\Debug. All three .csproj files target .NET Framework v3.5. The Rails app uses Gemfile with explicit version constraints pinned to Rails 3.2.8 era.",
+  "relevant_files": [
+    "src/wiresentry/WireSentry/WireSentry.csproj",
+    "src/wiresentry/WireSentry.SDK/WireSentry.SDK.csproj",
+    "src/wiresentry/WireSentry.Scanners.Common/WireSentry.Scanners.Common.csproj",
+    "src/wiresentry/wiresentryd.sln",
+    "src/wiresentry-web/Gemfile",
+    "src/wiresentry-web/Gemfile.lock"
+  ],
+  "directory_structure": "src/wiresentry/ - C# Mono solution with 3 projects (WireSentry main exe, WireSentry.SDK library, WireSentry.Scanners.Common library). src/wiresentry-web/ - Rails 3.2 web app. data/ - MySQL schema."
+}

@@ -1,0 +1,33 @@
+{
+  "project_type": "C# network IDS daemon, originally targeting .NET Framework 3.5/Mono, previously bumped to 4.8 in working tree. Three projects in one solution.",
+  "language": "C#",
+  "build_system": "MSBuild via old-style .csproj files. Migrating to SDK-style .csproj targeting net8.0.",
+  "test_framework": "None - no test projects exist in the solution.",
+  "build_command": "dotnet build src/wiresentry/wiresentryd.sln",
+  "test_command": "N/A - no tests",
+  "verification_instructions": "Cannot run dotnet build/restore under INTEGRATIONS_ONLY. Validate XML structure of .csproj files and C# syntax correctness by inspection.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "N/A - INTEGRATIONS_ONLY network mode, cannot install .NET SDK or restore packages.",
+  "environment_constraints": "INTEGRATIONS_ONLY network mode. Cannot run dotnet restore, dotnet build, or any package downloads. All changes must be validated structurally (well-formed XML, correct C# syntax).",
+  "contribution_requirements": "No CONTRIBUTING.md found.",
+  "key_patterns": "Old-style verbose .csproj with explicit Compile includes and DLL HintPath references. Mono.Options (vendored in Options.cs) for CLI parsing. Mono.Posix/Mono.Unix for Unix signals and current directory. MySql.Data.MySqlClient for database. SharpPcap/PacketDotNet for packet capture with deprecated GetEncapsulated() API.",
+  "relevant_files": [
+    "src/wiresentry/wiresentryd.sln",
+    "src/wiresentry/WireSentry/WireSentry.csproj",
+    "src/wiresentry/WireSentry.SDK/WireSentry.SDK.csproj",
+    "src/wiresentry/WireSentry.Scanners.Common/WireSentry.Scanners.Common.csproj",
+    "src/wiresentry/WireSentry/Daemon.cs",
+    "src/wiresentry/WireSentry/Driver.cs",
+    "src/wiresentry/WireSentry/MySqlLogger.cs",
+    "src/wiresentry/WireSentry/PacketProcessor.cs",
+    "src/wiresentry/WireSentry/ModuleManager.cs",
+    "src/wiresentry/WireSentry/Options.cs",
+    "src/wiresentry/WireSentry/ConsoleDebug.cs",
+    "src/wiresentry/WireSentry/AssemblyInfo.cs",
+    "src/wiresentry/WireSentry.SDK/AssemblyInfo.cs",
+    "src/wiresentry/WireSentry.SDK/ScannerResult.cs",
+    "src/wiresentry/WireSentry.Scanners.Common/AssemblyInfo.cs",
+    "src/wiresentry/WireSentry.Scanners.Common/DnsSpoofScanner.cs"
+  ],
+  "directory_structure": "src/wiresentry/ contains the C# solution with 3 projects: WireSentry (main exe), WireSentry.SDK (class library), WireSentry.Scanners.Common (class library). src/wiresentry-web/ is a Rails app (already updated, out of scope)."
+}

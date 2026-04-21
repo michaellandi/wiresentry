@@ -1,0 +1,14 @@
+{
+  "task_id": "task-migrate-dotnet8",
+  "task_description": "Migrate the WireSentry C# solution from .NET Framework 4.8/Mono to modern .NET 8. Convert all 3 old-style .csproj files to SDK-style format, replace DLL references with NuGet PackageReferences, and update source code for API compatibility.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "skipped",
+    "tests": "skipped",
+    "test_quality": "skipped",
+    "docker_build": "skipped",
+    "summary": "Cannot run dotnet build/restore under INTEGRATIONS_ONLY network mode. All 3 .csproj files validated as well-formed XML with Sdk=Microsoft.NET.Sdk and TargetFramework=net8.0. All deprecated API references removed: Mono.Unix (0 matches), MySql.Data (0 matches), GetEncapsulated (0 matches), MD5CryptoServiceProvider (0 matches), SecurityPermission (0 matches). Modern replacements confirmed: Extract<T>() in PacketProcessor.cs, PosixSignalRegistration in Daemon.cs, MySqlConnector in Driver.cs and MySqlLogger.cs, MD5.HashData in ScannerResult.cs. 13 files changed total."
+  }
+}

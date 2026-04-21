@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-001",
+  "type": "chore",
+  "description": "Upgrade C# project target framework and modernize .csproj files. All three .csproj files currently target .NET Framework v3.5 (TargetFrameworkVersion) with ToolsVersion 4.0. Upgrade the target framework to v4.8 (latest .NET Framework) across all three projects. This is the primary version upgrade available in the C# projects since the external library references (SharpPcap, PacketDotNet, MySql.Data) are DLL file references without version metadata in the .csproj.",
+  "status": "completed",
+  "steps": [
+    "In src/wiresentry/WireSentry/WireSentry.csproj: Change TargetFrameworkVersion from v3.5 to v4.8. Change ToolsVersion from 4.0 to 15.0. Change ProductVersion from 10.0.0 to 15.0.0.",
+    "In src/wiresentry/WireSentry.SDK/WireSentry.SDK.csproj: Change TargetFrameworkVersion from v3.5 to v4.8. Change ToolsVersion from 4.0 to 15.0. Change ProductVersion from 10.0.0 to 15.0.0.",
+    "In src/wiresentry/WireSentry.Scanners.Common/WireSentry.Scanners.Common.csproj: Change TargetFrameworkVersion from v3.5 to v4.8. Change ToolsVersion from 4.0 to 15.0. Change ProductVersion from 10.0.0 to 15.0.0.",
+    "In src/wiresentry/wiresentryd.sln: Update the Format Version from 11.00 to 12.00 and the Visual Studio comment from 2010 to 2019 to match the updated ToolsVersion."
+  ],
+  "acceptance_criteria": [
+    "All three .csproj files have TargetFrameworkVersion set to v4.8",
+    "All three .csproj files have ToolsVersion set to 15.0",
+    "The .sln file format version is updated to 12.00",
+    "All XML in .csproj files remains well-formed"
+  ],
+  "verification": [
+    "Run xmllint or python xml.etree to validate each .csproj file is well-formed XML",
+    "Grep all .csproj files for TargetFrameworkVersion to confirm v4.8",
+    "Grep all .csproj files for ToolsVersion to confirm 15.0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,41 @@
+{
+  "id": "FEAT-002",
+  "type": "refactor",
+  "description": "Update all C# source files to replace APIs not available in .NET 8: Mono.Unix/Mono.Posix usage, MySql.Data.MySqlClient to MySqlConnector, deprecated PacketDotNet GetEncapsulated() calls, deprecated MD5CryptoServiceProvider, and Options.cs compatibility fixes.",
+  "status": "completed",
+  "steps": [
+    "Update src/wiresentry/WireSentry/Daemon.cs: (a) Remove 'using Mono.Unix;' and 'using Mono.Unix.Native;' and 'using System.Data.Linq;'. (b) Replace 'ModuleEngine.Load(UnixEnvironment.CurrentDirectory)' with 'ModuleEngine.Load(Environment.CurrentDirectory)'. (c) Replace the UnixSignal.WaitAny block with a cross-platform equivalent using System.Runtime.InteropServices.PosixSignalRegistration (available in .NET 6+). Use PosixSignalRegistration.Create for PosixSignal.SIGINT, SIGTERM, SIGQUIT, SIGHUP. Use a ManualResetEventSlim to wait, and set it from the signal handler callbacks. Keep the same shutdown logic after the wait.",
+    "Update src/wiresentry/WireSentry/Driver.cs: (a) Replace 'using MySql.Data.MySqlClient;' with 'using MySqlConnector;'. The MySqlConnection and MySqlCommand APIs are compatible between MySql.Data and MySqlConnector, so no other changes needed in this file.",
+    "Update src/wiresentry/WireSentry/MySqlLogger.cs: (a) Replace 'using MySql.Data.MySqlClient;' with 'using MySqlConnector;'. The MySqlConnection, MySqlCommand, MySqlDbType APIs are compatible. No other changes needed.",
+    "Update src/wiresentry/WireSentry/PacketProcessor.cs: Replace all deprecated static GetEncapsulated() calls with the modern PacketDotNet Extract() extension method pattern. Specifically: (a) Replace 'IpPacket.GetEncapsulated(spacket)' with 'spacket.Extract<IPPacket>()' (note: IPPacket with capital P in modern PacketDotNet). (b) Replace 'TcpPacket.GetEncapsulated(spacket)' with 'spacket.Extract<TcpPacket>()'. (c) Replace 'UdpPacket.GetEncapsulated(spacket)' with 'spacket.Extract<UdpPacket>()'. (d) Replace 'ICMPv4Packet.GetEncapsulated(spacket)' with 'spacket.Extract<IcmpV4Packet>()' (note class name change: ICMPv4Packet -> IcmpV4Packet). (e) Replace 'ARPPacket.GetEncapsulated(spacket)' with 'spacket.Extract<ArpPacket>()' (note class name change: ARPPacket -> ArpPacket). (f) Update 'ip.SourceAddress' to 'ip.SourceAddress' and 'ip.DestinationAddress' to 'ip.DestinationAddress' (these remain the same in modern PacketDotNet). (g) Update 'arp.SenderHardwareAddress' to 'arp.SenderHardwareAddress' and 'arp.TargetHardwareAddress' to 'arp.TargetHardwareAddress' (these remain the same). (h) Update 'icmp.TypeCode' - in modern PacketDotNet this is 'icmp.TypeCode' (same). (i) Add 'using PacketDotNet.Utils;' if needed for Extract extension method.",
+    "Update src/wiresentry/WireSentry.SDK/ScannerResult.cs: Replace 'new MD5CryptoServiceProvider().ComputeHash(bytes)' with 'MD5.HashData(bytes)' (available in .NET 5+). This avoids the obsolete MD5CryptoServiceProvider. Add 'using System.Security.Cryptography;' if not already present (it is).",
+    "Update src/wiresentry/WireSentry/Options.cs: (a) Remove 'using System.Security.Permissions;' (SecurityPermission attribute is not available in .NET Core). (b) Remove the '[SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]' attribute from the GetObjectData method in OptionException class. (c) Remove the 'protected OptionException(SerializationInfo info, StreamingContext context)' constructor since BinaryFormatter serialization is obsolete in .NET 8. Keep the [Serializable] attribute for now as it still compiles.",
+    "Update src/wiresentry/WireSentry/ConsoleDebug.cs: Replace 'Console.Beep()' calls - Console.Beep() is available on .NET 8 but only works on Windows. Since this is a Linux daemon, wrap Console.Beep() calls in a try-catch or use a platform check. Actually, Console.Beep() in .NET 8 on non-Windows just does nothing (no exception), so no change needed. However, Console.WindowWidth can throw on non-Windows terminals. Wrap the Console.WindowWidth access in the Status() method in a try-catch that defaults to 80 if it throws.",
+    "Update src/wiresentry/WireSentry/Daemon.cs: Also remove 'using System.Data.Linq;' since System.Data.Linq is not available in .NET 8 and is not actually used in this file (it was likely a leftover).",
+    "Verify that src/wiresentry/WireSentry.SDK/DataPacket.cs, IDataPacketCollection.cs, Scanner.cs, Handler.cs, IDebug.cs, NetworkProtocol.cs need no changes (they use only System.* APIs available in .NET 8).",
+    "Verify that src/wiresentry/WireSentry.Scanners.Common/ArpSpoofScanner.cs, DnsSpoofScanner.cs, PortScanScanner.cs, TestHandler.cs, MyClass.cs need no changes (they use only WireSentry.SDK and System.* APIs)."
+  ],
+  "acceptance_criteria": [
+    "No source file references Mono.Unix, Mono.Unix.Native, or Mono.Posix namespaces",
+    "No source file references MySql.Data.MySqlClient - all use MySqlConnector instead",
+    "PacketProcessor.cs uses Extract<T>() instead of GetEncapsulated()",
+    "PacketProcessor.cs uses modern class names: IPPacket, IcmpV4Packet, ArpPacket",
+    "ScannerResult.cs uses MD5.HashData() instead of MD5CryptoServiceProvider",
+    "Options.cs has no SecurityPermission attribute and no BinaryFormatter serialization constructor",
+    "Daemon.cs uses PosixSignalRegistration instead of UnixSignal",
+    "Daemon.cs uses Environment.CurrentDirectory instead of UnixEnvironment.CurrentDirectory",
+    "ConsoleDebug.cs handles Console.WindowWidth safely with try-catch",
+    "All C# files have syntactically correct using statements and no references to removed APIs"
+  ],
+  "verification": [
+    "Grep all .cs files for 'Mono.Unix' and 'Mono.Posix' to confirm zero matches",
+    "Grep all .cs files for 'MySql.Data' to confirm zero matches",
+    "Grep all .cs files for 'GetEncapsulated' to confirm zero matches",
+    "Grep all .cs files for 'MD5CryptoServiceProvider' to confirm zero matches",
+    "Grep all .cs files for 'SecurityPermission' to confirm zero matches",
+    "Grep PacketProcessor.cs for 'Extract<' to confirm modern API usage",
+    "Grep Daemon.cs for 'PosixSignalRegistration' to confirm modern signal handling"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

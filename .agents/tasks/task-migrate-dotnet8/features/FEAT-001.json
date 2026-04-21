@@ -1,0 +1,30 @@
+{
+  "id": "FEAT-001",
+  "type": "refactor",
+  "description": "Convert all 3 old-style .csproj files to SDK-style format targeting net8.0, replace DLL references with NuGet PackageReferences, and update the solution file.",
+  "status": "completed",
+  "steps": [
+    "Rewrite src/wiresentry/WireSentry.SDK/WireSentry.SDK.csproj as a minimal SDK-style project: <Project Sdk=\"Microsoft.NET.Sdk\">, TargetFramework net8.0, OutputType Library, RootNamespace XTSec.SDK, AssemblyName WireSentry.SDK. No PackageReferences needed (this project only uses System.* types). Remove all explicit <Compile> items (SDK-style auto-globs). Remove the old AssemblyInfo.cs attributes by setting <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to keep the existing AssemblyInfo.cs file.",
+    "Rewrite src/wiresentry/WireSentry.Scanners.Common/WireSentry.Scanners.Common.csproj as SDK-style: TargetFramework net8.0, OutputType Library, RootNamespace XTSec.Scanners.Common, AssemblyName WireSentry.Scanners.Common. Add ProjectReference to ../WireSentry.SDK/WireSentry.SDK.csproj. Set GenerateAssemblyInfo false. Remove explicit Compile items.",
+    "Rewrite src/wiresentry/WireSentry/WireSentry.csproj as SDK-style: TargetFramework net8.0, OutputType Exe (not WinExe - this is a console daemon), RootNamespace WireSentry, AssemblyName WireSentry. Add PackageReferences: SharpPcap 6.3.0, PacketDotNet 1.4.7, MySqlConnector 2.3.7. Add ProjectReferences to ../WireSentry.SDK/WireSentry.SDK.csproj and ../WireSentry.Scanners.Common/WireSentry.Scanners.Common.csproj. Set GenerateAssemblyInfo false. Remove Mono.Posix, System.Data.Linq, MySql.Data, MySql.Data.Entity references (these are replaced by code changes in FEAT-002).",
+    "Update src/wiresentry/wiresentryd.sln: keep the existing solution structure but remove the MonoDevelopProperties global section since this is no longer a MonoDevelop project."
+  ],
+  "acceptance_criteria": [
+    "All 3 .csproj files use <Project Sdk=\"Microsoft.NET.Sdk\"> format",
+    "All 3 .csproj files target net8.0",
+    "WireSentry.csproj has PackageReference entries for SharpPcap 6.3.0, PacketDotNet 1.4.7, and MySqlConnector 2.3.7",
+    "WireSentry.csproj has no HintPath DLL references",
+    "WireSentry.csproj has no references to Mono.Posix, System.Data.Linq, MySql.Data, or MySql.Data.Entity",
+    "All .csproj files are well-formed XML",
+    "Solution file no longer has MonoDevelopProperties section"
+  ],
+  "verification": [
+    "Validate each .csproj is well-formed XML using xmllint or python xml.etree",
+    "Grep each .csproj for 'net8.0' to confirm target framework",
+    "Grep WireSentry.csproj for PackageReference to confirm SharpPcap, PacketDotNet, MySqlConnector",
+    "Grep all .csproj files to confirm no HintPath elements remain",
+    "Grep wiresentryd.sln to confirm MonoDevelopProperties is removed"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
